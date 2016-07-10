@@ -7,12 +7,16 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
 
-.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage) {
+.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, $http) {
       $rootScope.currency = constants.currency;
       $rootScope.base = constants.uploadFilesUrl;
       $window.moment.locale("es");
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
+      
+      $http.get('/js/company.json').success(function(res){
+        $rootScope._company = angular.fromJson(res)._id;
+      });
 
     $ionicPlatform.ready(function() {
       var push = PushNotification.init({
@@ -91,10 +95,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-soply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-soply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
-                   
-                   if(angular.fromJson(window.localStorage.user)._company){
-                      $httpProvider.defaults.headers.common['x-soply-company']  =  angular.fromJson(window.localStorage.user)._company._id ||  angular.fromJson(window.localStorage.user)._company;
-                   }
+                   $httpProvider.defaults.headers.common['x-soply-company']  =  rootScope._company;
 
                 }
 
