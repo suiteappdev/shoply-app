@@ -13,41 +13,12 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       $window.moment.locale("es");
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
-      
-      $http.get('/js/company.json').success(function(res){
-        $rootScope._company = angular.fromJson(res)._id;
-      });
-
+    
     $ionicPlatform.ready(function() {
-      var push = PushNotification.init({
-          android: {
-              senderID: "871168760"
-          },
-          ios: {
-              alert: "true",
-              badge: "true",
-              sound: "true"
-          },
-          windows: {}
+      
+      cordova.getAppVersion.getPackageName().then(function(app) {
+          $rootScope._company = app.split(".")[2];
       });
-
-      push.on('registration', function(data) {
-          alert(data.registrationId);
-      });
-
-      push.on('notification', function(data) {
-          // data.message,
-          // data.title,
-          // data.count,
-          // data.sound,
-          // data.image,
-          // data.additionalData
-      });
-
-      push.on('error', function(e) {
-
-      });
-
 
      window.socket = new io(constants.socket);
           window.socket.on("connect", function(){
@@ -93,10 +64,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 $httpProvider.defaults.withCredentials = false;
                 
                 if(window.localStorage.token){
-                   $httpProvider.defaults.headers.common['x-soply-auth'] =  window.localStorage.token ; // common
-                   $httpProvider.defaults.headers.common['x-soply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
-                   $httpProvider.defaults.headers.common['x-soply-company']  =  rootScope._company;
-
+                   $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
+                   $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
+                   $httpProvider.defaults.headers.common['x-shoply-company']  =  $rootScope._company;
                 }
 
                 console.log(config, 'request')

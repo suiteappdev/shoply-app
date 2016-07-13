@@ -1,4 +1,4 @@
-angular.module('starter.controllers').controller('loginCtrl', function($scope, push, constants, account, storage, $ionicPopup, $state){
+angular.module('starter.controllers').controller('loginCtrl', function($scope, constants, account, storage, $ionicPopup, $state){
     $scope.load = function(){
         if(storage.get('token')){
             $state.go(constants.login_state_sucess);
