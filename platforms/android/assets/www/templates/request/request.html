@@ -1,0 +1,15 @@
+<ion-view view-title="Pedidos" style="background-color: #F1F1F1;background-image:url('img/background-content.png')">
+  <ion-content class="" ng-controller="requestCtrl" ng-init="load()">
+      <div class="list">
+		  <a class="item" href="#" ng-repeat="record in records">
+		   <h2>{{record._client.name + " " + record._client.last_name}}</h2>
+		   <p>{{record.createdAt | date:"yyyy-MM-dd hh:mm:ss a"}}</p>
+		    <span ng-show="record.metadata.estado == 'Facturado' " class="badge badge-assertive badge-tiny label-darkblue">{{record.metadata.estado}}</span>
+		    <span ng-show="record.metadata.estado == 'Pendiente'" class="badge badge-warning badge-tiny label-darkblue">{{record.metadata.estado}}</span>
+		    <span ng-show="record.metadata.estado == 'Despachado'" class="badge badge-success badge-tiny label-darkblue">{{record.metadata.estado}}</span>
+		  </a>
+        </form>
+      </div>
+  </ion-content>
+</ion-view>
+
