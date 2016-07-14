@@ -17,7 +17,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     $ionicPlatform.ready(function() {
       
       cordova.getAppVersion.getPackageName().then(function(app) {
-          $rootScope._company = app.split(".")[2];
+          $rootScope._company = app.split("ID")[1];
       });
 
      window.socket = new io(constants.socket);
