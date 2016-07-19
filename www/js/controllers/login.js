@@ -1,4 +1,4 @@
-angular.module('starter.controllers').controller('loginCtrl', function($scope, constants, account, storage, $ionicPopup, $state){
+angular.module('starter.controllers').controller('loginCtrl', function($scope, $http, constants, account, storage, $ionicPopup, $state){
     $scope.load = function(){
         if(storage.get('token')){
             $state.go(constants.login_state_sucess);
@@ -8,6 +8,13 @@ angular.module('starter.controllers').controller('loginCtrl', function($scope, c
     $scope.login = function(){
         account.login($scope.form.data).then(function(res){
             if(res.token){
+
+                if(!storage.get('device_registered')){
+                    $http.post("http://www.shoply.com.co:8080/push/register/" + res.user._id, { device_token : storage.get('device_token')}).then(function(res){
+                        storage.save('device_registered', true);
+                    });                    
+                }
+
                 storage.save('token', res.token);
                 storage.save('user', res.user);
                 var user = res.user;
