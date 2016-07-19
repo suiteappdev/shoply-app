@@ -13,12 +13,17 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       $window.moment.locale("es");
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
+
+      $rootScope.$apply();
     
     $ionicPlatform.ready(function() {
-      
-      cordova.getAppVersion.getPackageName().then(function(app) {
-          $rootScope._company = app.split(".")[2];
-      });
+      try{
+          cordova.getAppVersion.getPackageName().then(function(app) {
+              $rootScope._company = app.split("ID")[1];
+          });        
+      }catch(e){
+        console.log(e);
+      }
 
      window.socket = new io(constants.socket);
           window.socket.on("connect", function(){
@@ -36,6 +41,40 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
+
+    var push = PushNotification.init({
+          android: {
+              senderID: "871168760"
+          },
+          ios: {
+              alert: "true",
+              badge: "true",
+              sound: "true"
+          },
+          windows: {}
+    });
+
+    push.on('registration', function(data) {
+      alert(data.registrationId);
+        $scope.$apply(function(){
+           $http.post(constants.base_url +"push/register/"+  $rootScope.user._id, { device_token : data.registrationId}).success(function(res){
+              alert("res", res);
+           });                  
+        });
+    });
+
+    push.on('notification', function(data) {
+          // data.message,
+          // data.title,
+          // data.count,
+          // data.sound,
+          // data.image,
+          // data.additionalData
+    });
+
+    push.on('error', function(e) {
+        alert(e);
+    });
 
   });
 
@@ -66,7 +105,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
-                   $httpProvider.defaults.headers.common['x-shoply-company']  =  $rootScope._company;
+                   $httpProvider.defaults.headers.common['x-shoply-company']  =  rootScope._company;
                 }
 
                 console.log(config, 'request')
