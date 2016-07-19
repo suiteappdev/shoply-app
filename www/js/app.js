@@ -31,10 +31,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       });
 
       push.on('registration', function(data) {
-        //data.registrationId
-        $http.post("www.shoply.com.co:8080/push/register/" + $rootScope.user._id, { device_token:"adsdsdsdaddsdsadsd"}).then(function(res){
-          alert(res);
-        });
+        storage.save("device_token", data.registrationId);
       });
 
       push.on('notification', function(data) {
