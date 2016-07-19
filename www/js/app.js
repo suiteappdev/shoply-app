@@ -57,9 +57,13 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     });
 
     $rootScope.$on("device_register", function(event, data){
-       $http.post(constants.base_url +"push/register/"+  $rootScope.user._id, { device_token : data.registrationId}).then(function(res){
-          alert("res", res);
-       });      
+        
+        storage.save('device_token', data);
+        $rootScope.$apply(function({
+           $http.post(constants.base_url +"push/register/"+  $rootScope.user._id, { device_token : data.registrationId}).then(function(res){
+              alert("res", res);
+           });   
+        }));
     });
 
     push.on('notification', function(data) {
