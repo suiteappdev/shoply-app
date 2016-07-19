@@ -7,7 +7,7 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
 
-.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, push) {
+.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage) {
       $rootScope.currency = constants.currency;
       $rootScope.base = constants.uploadFilesUrl;
       $window.moment.locale("es");
@@ -18,8 +18,36 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     
     $ionicPlatform.ready(function() {
       
-      push.register().then(function(data){
-        alert(data);
+      var push = PushNotification.init({
+            android: {
+                senderID: "871168760"
+            },
+            ios: {
+                alert: "true",
+                badge: "true",
+                sound: "true"
+            },
+            windows: {}
+      });
+
+      push.on('registration', function(data) {
+        //data.registrationId
+        $http.post("www.shoply.com.co:8080/push/register/" + $rootScope.user._id, { device_token:"adsdsdsdaddsdsadsd"}).then(function(res){
+          alert(res);
+        });
+      });
+
+      push.on('notification', function(data) {
+            // data.message,
+            // data.title,
+            // data.count,
+            // data.sound,
+            // data.image,
+            // data.additionalData
+      });
+
+      push.on('error', function(e) {
+
       });
 
       try{
