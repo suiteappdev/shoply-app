@@ -50,14 +50,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       try{
           cordova.getAppVersion.getPackageName().then(function(app) {
               $rootScope._company = app.split("ID")[1];
-
-              if($rootScope.user){
-                if(!storage.get("device_status")){
-                  $http.post('http://www.shoply.com.co:8080/push/register' + $rootScope.user._id, { device_token : storage.get('device_token')}).then(function(res){
-                      storage.save("device_status", "registered");
-                  });                   
-                }
-              }
+          })
 
       }catch(e){
         console.log(e);
