@@ -8,15 +8,9 @@ angular.module('starter.controllers').controller('loginCtrl', function($scope, c
     $scope.login = function(){
         account.login($scope.form.data).then(function(res){
             if(res.token){
-                alert(storage.get('device_token'));
                 storage.save('token', res.token);
                 storage.save('user', res.user);
                 var user = res.user;
-                
-                if(angular.fromJson(storage.get("FIRSTTIME"))){
-                    storage.save('FIRSTTIME', true);
-                }
-
                 $state.go('tab.dash');
             }
 
