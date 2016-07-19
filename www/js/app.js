@@ -7,16 +7,21 @@
 // 'starter.controllers' is found in controllers.js
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
 
-.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, $http) {
+.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, push) {
       $rootScope.currency = constants.currency;
       $rootScope.base = constants.uploadFilesUrl;
       $window.moment.locale("es");
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
 
-      $rootScope.$apply();
+     $rootScope.$apply();
     
     $ionicPlatform.ready(function() {
+      
+      push.register().then(function(data){
+        alert(data);
+      });
+
       try{
           cordova.getAppVersion.getPackageName().then(function(app) {
               $rootScope._company = app.split("ID")[1];
@@ -39,45 +44,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       // org.apache.cordova.statusbar required
       StatusBar.styleDefault();
     }
-
-    var push = PushNotification.init({
-          android: {
-              senderID: "871168760"
-          },
-          ios: {
-              alert: "true",
-              badge: "true",
-              sound: "true"
-          },
-          windows: {}
-    });
-
-    push.on('registration', function(data) {
-      $rootScope.$emit("device_register", data);
-    });
-
-    $rootScope.$on("device_register", function(event, data){
-        
-        storage.save('device_token', data);
-        $rootScope.$apply(function({
-           $http.post(constants.base_url +"push/register/"+  $rootScope.user._id, { device_token : data.registrationId}).then(function(res){
-              alert("res", res);
-           });   
-        }));
-    });
-
-    push.on('notification', function(data) {
-          // data.message,
-          // data.title,
-          // data.count,
-          // data.sound,
-          // data.image,
-          // data.additionalData
-    });
-
-    push.on('error', function(e) {
-        alert(e);
-    });
 
   });
 
