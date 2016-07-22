@@ -50,6 +50,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       try{
           cordova.getAppVersion.getPackageName().then(function(app) {
               $rootScope._company = app.split("ID")[1];
+              $rootScope.$apply();
           })
 
       }catch(e){
@@ -100,7 +101,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
-                   $httpProvider.defaults.headers.common['x-shoply-company']  =  rootScope._company;
+                   $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
                 }
 
                 console.log(config, 'request')
