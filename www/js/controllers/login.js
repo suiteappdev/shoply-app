@@ -1,4 +1,4 @@
-angular.module('starter.controllers').controller('loginCtrl', function($scope, $http, constants, account, storage, $ionicPopup, $state){
+angular.module('starter.controllers').controller('loginCtrl', function($scope, $http, constants, account, storage, $ionicPopup, $state, $rootScope){
     $scope.load = function(){
         if(storage.get('token')){
             $state.go(constants.login_state_sucess);
@@ -18,6 +18,8 @@ angular.module('starter.controllers').controller('loginCtrl', function($scope, $
                 storage.save('token', res.token);
                 storage.save('user', res.user);
                 var user = res.user;
+                $rootScope.user = user;
+
                 $state.go('tab.dash');
             }
 

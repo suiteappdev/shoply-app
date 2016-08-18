@@ -74,7 +74,6 @@ angular.module('starter.controllers').controller('shoppingCarController', functi
                     _data.metadata.geo.longitude = res.coords.longitude;
 
                     _data.metadata.total = shoppingCart.totalize();
-                    _data.metadata.envio = 2000;
                     _data.metadata.cantidad = $rootScope.shoppingCart.length;
 
                     _data.metadata.total_iva_5 = shoppingCart.totalizeIva(5);

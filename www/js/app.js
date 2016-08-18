@@ -14,8 +14,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
 
-     $rootScope.$apply();
-    
     $ionicPlatform.ready(function(){
       
       var push = PushNotification.init({
@@ -81,10 +79,10 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         $rootScope.searchBtn = false;;
       }
 
-        if (nextRoute != null && nextRoute.access != null && nextRoute.access.requiredAuthentication && !storage.get('token')) {
-                event.preventDefault();
-                $state.transitionTo('login');
-        }
+      if (nextRoute != null && nextRoute.access != null && nextRoute.access.requiredAuthentication && !storage.get('token')) {
+              event.preventDefault();
+              $state.transitionTo('login');
+      }
   });
 })
 
@@ -102,6 +100,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
                    $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
+                   //$httpProvider.defaults.headers.common['x-shoply-company']  = "579a3203a6f111f93aed9fb4";
                 }
 
                 console.log(config, 'request')
