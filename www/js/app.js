@@ -8,14 +8,15 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
 
 .run(function($ionicPlatform, $rootScope, $state, $window, constants, storage) {
+    $ionicPlatform.ready(function(){
       $rootScope.currency = constants.currency;
       $rootScope.base = constants.uploadFilesUrl;
       $window.moment.locale("es");
       $rootScope.shoppingCart = [];
       $rootScope.user = storage.get('user');
-
-    $ionicPlatform.ready(function(){
       
+      navigator.splashscreen.hide();
+
       var push = PushNotification.init({
             android: {
                 senderID: "871168760"
