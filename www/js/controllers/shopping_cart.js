@@ -10,7 +10,9 @@ angular.module('starter.controllers').controller('shoppingCarController', functi
 
    $scope.load = function(){
         api.user().get().success(function(res){
-            $scope.records = res || [];
+            $scope.records = res.filter(function(o){
+                return o.type == 'CLIENT';
+            });
         });
    }
 

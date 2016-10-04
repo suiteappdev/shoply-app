@@ -100,7 +100,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
                    $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
-                   //$httpProvider.defaults.headers.common['x-shoply-company']  = "579a3203a6f111f93aed9fb4";
+                   //$httpProvider.defaults.headers.common['x-shoply-company']  = "57ed7a8ce27a55185efa9ef6";
                 }
 
                 console.log(config, 'request')
