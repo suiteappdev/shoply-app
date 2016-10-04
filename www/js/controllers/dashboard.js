@@ -149,7 +149,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
     $scope.load = function(){
         $scope.show();
 
-        api.categoria().add("root").get({cache:false}).success(function(res){
+        api.categoria().add("root").get().success(function(res){
             $scope.records = res || [];
             $scope.hide();
         });
