@@ -1,6 +1,5 @@
 angular.module('starter.controllers').controller('commentCtrl', function($scope, $rootScope, $stateParams, api, $ionicPopup, $state, storage, $ionicLoading){
     $scope.load = function(){
-
     	if($stateParams.producto){
     		$scope.show();
 

@@ -100,7 +100,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
                    $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
-                   //$httpProvider.defaults.headers.common['x-shoply-company']  = "57ed7a8ce27a55185efa9ef6";
+                  alert(rootScope._company);
                 }
 
                 console.log(config, 'request')
@@ -159,7 +159,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     views: {
       'tab-dash': {
         templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
+        controller: 'dashboardCtrl'
       }
     }
   })

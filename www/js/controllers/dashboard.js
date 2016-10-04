@@ -53,7 +53,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
           return;
         }
 
-        var _reqCategories = api.categoria().add("childs/" + _parent.parent).get();
+        var _reqCategories = api.categoria().add("childs/" + _parent.parent).get({cache:false});
         
         $q.all([_reqCategories]).then(function(values){
             $scope.records = values[0].data;
@@ -149,7 +149,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
     $scope.load = function(){
         $scope.show();
 
-        api.categoria().add("root").get().success(function(res){
+        api.categoria().add("root").get({cache:false}).success(function(res){
             $scope.records = res || [];
             $scope.hide();
         });
