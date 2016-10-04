@@ -49,6 +49,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           cordova.getAppVersion.getPackageName().then(function(app) {
               $rootScope._company = app.split("ID")[1];
               $rootScope.$apply();
+              alert("empresa", $rootScope._company);
           })
 
       }catch(e){
@@ -100,7 +101,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
                    $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
-                  alert(rootScope._company);
                 }
 
                 console.log(config, 'request')
@@ -155,6 +155,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   .state('tab.dash', {
     url: '/dash',
+    cache : false,
     access: { requiredAuthentication: true },
     views: {
       'tab-dash': {
