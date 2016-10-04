@@ -53,6 +53,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           })
 
       }catch(e){
+        alert(e);
         console.log(e);
       }
 
@@ -100,7 +101,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
                    $httpProvider.defaults.headers.common['x-shoply-user'] =  angular.fromJson(window.localStorage.user) ?  angular.fromJson(window.localStorage.user)._id : null  ; // common
-                   $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
+                   $httpProvider.defaults.headers.common['x-shoply-company']  = "57ed7a8ce27a55185efa9ef6" //rootScope._company;
                 }
 
                 console.log(config, 'request')
