@@ -159,8 +159,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     access: { requiredAuthentication: true },
     views: {
       'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'dashboardCtrl'
+        templateUrl: 'templates/tab-dash.html'
       }
     }
   })
