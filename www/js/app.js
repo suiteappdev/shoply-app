@@ -49,7 +49,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
           cordova.getAppVersion.getPackageName().then(function(app) {
               alert(app.split("ID")[1]);
               $rootScope._company = app.split("ID")[1];
-              $rootScope.$apply();
           })
 
       }catch(e){
