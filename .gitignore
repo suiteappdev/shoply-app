@@ -2,9 +2,7 @@
 # http://git-scm.com/docs/gitignore
 
 node_modules/
-platforms/
 hooks/
-/platforms
 /hooks
 /config.xml
 config.xml/
