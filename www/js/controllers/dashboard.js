@@ -150,6 +150,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
         $scope.show();
 
         api.categoria().add("root").get().success(function(res){
+          alert(res.length)
             $scope.records = res || [];
             $scope.hide();
         });

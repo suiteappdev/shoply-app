@@ -57,6 +57,8 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
         console.log(e);
       }
 
+      alert("empresa" + $rootScope._company)
+
      window.socket = new io(constants.socket);
           window.socket.on("connect", function(){
           console.log("Socket Status: OK")
@@ -159,8 +161,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     access: { requiredAuthentication: true },
     views: {
       'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-         controller: 'DashCtrl'
+        templateUrl: 'templates/tab-dash.html'
       }
     }
   })
