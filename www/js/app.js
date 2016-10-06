@@ -40,6 +40,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
       try{
           cordova.getAppVersion.getPackageName().then(function(app) {
+              //app company _id
               $rootScope._company = app.split("ID")[1];
               $rootScope.$apply();
           })
