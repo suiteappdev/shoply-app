@@ -1,11 +1,16 @@
 angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
 
-.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage) {
+.run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, $http) {
     $rootScope.currency = constants.currency;
     $rootScope.base = constants.uploadFilesUrl;
     $window.moment.locale("es");
     $rootScope.shoppingCart = [];
     $rootScope.user = storage.get('user');
+
+    $http.get('js/app.json').success(function(res){
+      $rootScope.APP = res;
+      alert("app", $rootScope.APP.name);
+    })
 
     $ionicPlatform.ready(function(){
       navigator.splashscreen.hide();
