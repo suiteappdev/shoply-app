@@ -15,6 +15,14 @@
     color: gray;
 }
 
+.action-product{
+    color: gray!important;
+}
+
+.action-product i{
+    color: gray!important;
+}
+
 .tab-title{
     color:gray;
 }
