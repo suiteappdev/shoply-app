@@ -8,6 +8,7 @@
     <link href="lib/ionic/css/ionic.css" rel="stylesheet">
     <link href="lib/sweetalert/dist/sweetalert.css" rel="stylesheet">
     <link href="css/style.css" rel="stylesheet">
+    <link href="css/theme.css" rel="stylesheet">
     <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
     <link href="css/ionic.app.css" rel="stylesheet">
     -->
@@ -36,6 +37,7 @@
     <script src="js/controllers/comment.js"></script>
     <script src="js/controllers/options.js"></script>
     <script src="js/controllers/password_reset.js"></script>
+    <script src="js/directives/themable.js"></script>
     <script src="js/controllers/setting.js"></script>
     <script src="js/controllers/request.js"></script>
     <script src="js/services/services.js"></script>
@@ -47,11 +49,11 @@
     <script src="js/services/api.js"></script>
     <script src="js/services/shoppingcart.js"></script>
   </head>
-  <body ng-app="starter">
+  <body ng-app="starter" spThemable>
     <!--
       The nav bar that will be updated as we navigate between views.
     -->
-    <ion-nav-bar class="bar-stable">
+    <ion-nav-bar>
       <ion-nav-back-button></ion-nav-back-button>
        <ion-nav-buttons side="right"  >
            <!--

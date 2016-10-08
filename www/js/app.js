@@ -9,7 +9,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
     $http.get('js/app.json').success(function(res){
       $rootScope.APP = res;
-      alert("app", $rootScope.APP.name);
     })
 
     $ionicPlatform.ready(function(){

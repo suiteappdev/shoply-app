@@ -1,0 +1,45 @@
+.bar.bar-stable .title{
+    color:white;
+}
+
+.bar.bar-stable{
+    background-color: #FF0A21;
+    border-color: #CA0000;
+}
+
+.tabs{
+
+}
+
+.tab-item .icon {
+    color: gray;
+}
+
+.tab-title{
+    color:gray;
+}
+
+.bar-stable .button.button-clear {
+    color: #FFF!important;
+}
+
+.badge-tiny{
+    font-size: 9px;
+    position: absolute!important;
+    top: 13px!important;
+    right: 4px!important;
+    font-weight: 100;
+}
+
+.label-darkblue {
+    background-color: #001c24!important;
+}
+
+.custom-list-tab{
+    background-color: #313131!important;
+    border-top: #FFF;
+}
+
+.slider-pager .slider-pager-page {
+    color: gray!important;
+}
