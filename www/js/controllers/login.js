@@ -23,12 +23,43 @@ angular.module('starter.controllers').controller('loginCtrl', function($scope, $
                 $state.go('tab.dash');
             }
 
-        }, function(status){
-            if(status == 401){
-            var alertPopup = $ionicPopup.alert({
-                title: 'Login failed!',
-                template: 'Please check your credentials!'
-            });
+        }, function(data, status){
+            if(data.status == 401){
+               var confirmPopup = $ionicPopup.confirm({
+                 title: 'Error de inicio de session!',
+                 template: 'Verifica tus credenciales!',
+                  scope: $scope,
+                  buttons: [
+                    {
+                      text: '<b>Ok</b>',
+                      type: 'button-custom',
+                      onTap: function(e) {
+                        return true;
+                      }
+                    }
+                  ]
+               });
+
+                return;
+            }
+
+            if(data.status == 404){
+               var confirmPopup = $ionicPopup.confirm({
+                 title: 'Usuario no encontrado!',
+                 template: 'no exixte un usuario registrado con este email!',
+                  scope: $scope,
+                  buttons: [
+                    {
+                      text: '<b>Ok</b>',
+                      type: 'button-custom',
+                      onTap: function(e) {
+                        return true;
+                      }
+                    }
+                  ]
+               });
+               
+                return;   
             }
         } )
     }

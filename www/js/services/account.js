@@ -19,8 +19,8 @@ angular.module('starter.controllers')
 
             $http.post(constants.base_url + 'login', data).success(function(data) {
                     async.resolve(data);
-                }).error(function(status){
-                    async.reject(status);
+                }).error(function(data, status){
+                    async.reject({data:data , status : status});
             });
 
             return async.promise;
