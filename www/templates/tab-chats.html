@@ -22,13 +22,20 @@
       </a>
       </ion-list>
     </ion-content>
-    <ion-footer-bar ng-hide="$root.shoppingCart.length == 0" align-title="left">
-      <div style="text-align:center">
-        <button ng-click="formInfo()" class="button button-custom icon ion-paper-airplane">
-           Facturar
-        </button>
+
+    <ion-footer-bar style="height:60px!important;" ng-hide="$root.shoppingCart.length == 0" align-title="left">
+      <div class="row">
+          <div class="col">
+            <button style="margin:0px;" ng-click="formInfo('OP')" class="button button-custom icon ion-paper-airplane button button-block">
+               Pedir
+            </button>
+          </div>
+          <div class="col" >
+           <button style="margin:0px;" ng-click="formInfo('FA')" class="button button-custom icon ion-card button button-block">
+               Facturar
+           </button>
+          </div>      
       </div>
-      <div class="col"  style="text-align:center" ><strong class="sub-footer-text">{{total | currency:"$ "}} COP</strong></div>
     </ion-footer-bar>  
 </div>
 

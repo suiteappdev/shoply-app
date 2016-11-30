@@ -1,4 +1,4 @@
-angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image'])
+angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', 'ionic-modal-select', 'ngCordova', 'angular-preload-image', 'ui.utils.masks'])
 
 .run(function($ionicPlatform, $rootScope, $state, $window, constants, storage, $http) {
     $rootScope.currency = constants.currency;
@@ -6,10 +6,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
     $window.moment.locale("es");
     $rootScope.shoppingCart = [];
     $rootScope.user = storage.get('user');
-
-    $http.get('js/app.json').success(function(res){
-      $rootScope.APP = res;
-    })
 
     $ionicPlatform.ready(function(){
       navigator.splashscreen.hide();
@@ -96,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
-                   $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company;
+                   $httpProvider.defaults.headers.common['x-shoply-company']  = "583ee0528d125cd57cb4ba9c";//rootScope._company;
                 }
 
                 console.log(config, 'request')

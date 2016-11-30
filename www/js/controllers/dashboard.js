@@ -80,9 +80,9 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
         var _product = this.record;
         console.log(_product);
           var myPopup = $ionicPopup.show({
-            template: '<input type="number" style="text-align:center;" placeholder="Numero de Unidades"  ng-model="$parent.unidades">',
-            title: 'Numero de Unidades',
-            subTitle: 'escriba el numero de unidadesa pedir',
+            template: '<input type="number"  ng-init="$parent.unidades = 1" style="text-align:center;" placeholder="Numero de Unidades"  ng-model="$parent.unidades">',
+            title: 'Unidades',
+            subTitle: 'escriba el numero de unidades a pedir',
             scope: $scope,
             buttons: [
               { text: 'Cancelar' },
