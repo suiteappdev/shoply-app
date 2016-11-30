@@ -88,11 +88,12 @@
            </div>
         </div>
     </ion-footer-bar> 
-    <ion-footer-bar ng-hide="$root.shoppingCart.length == 0" align-title="left">
-        <button ng-show="$root.mode == 'OP'"  style="margin:0px;width:100%;" ng-click="sendRequest()" class="button button-block button-custom icon ion-paper-airplane">
+    <ion-footer-bar ng-hide="$root.shoppingCart.length == 0" align-title="left" style="padding:0px;">
+        <button ng-show="$root.mode == 'OP'"  style="margin: 0px;width: 100%;right: 0px;   bottom: 0px;" ng-click="sendRequest()" class="button button-block button-custom icon ion-paper-airplane">
            Realizar pedido
         </button>
-        <button ng-show="$root.mode == 'FA'"  style="margin:0px;width:100%;" ng-click="bill()" class="button button-block button-custom icon ion-card">
+        <button ng-show="$root.mode == 'FA'"  style="margin: 0px;width: 100%;right: 0px;
+    bottom: 0px;" ng-click="bill()" class="button button-block button-custom icon ion-card">
            Facturar
         </button>
     </ion-footer-bar> 
