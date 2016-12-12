@@ -10,31 +10,48 @@
           </div>
         </div>
       </div>
-      <ion-list>
-      <a on-double-tap="remove(record)" class="item item-thumbnail-left" href="#"  ng-repeat="record in $root.shoppingCart">
-        <img ng-src="{{record.data.gallery[0].URL}}">
-        <h2>{{record.data.producto}}</h2>
-        <p>{{record.data.descripcion}}</p>
-        <span class="" style="font-size:14px;color:#f1c504"><strong style="font-family: monospace;">{{record.data.precio_venta | currency:"$ "}}</strong></span>
-        <div class="qty" style="position: absolute;top: -12px;left: 36px;">
-          <span class="badge badge-positive" style="position: relative;float: left;">{{record.data.unidades}}</span>
-        </div>
-      </a>
-      </ion-list>
-    </ion-content>
+        <ion-list ng-controller="shoppingCarController"
+                  show-delete="shouldShowDelete"
+                  show-reorder="shouldShowReorder"
+                  can-swipe="listCanSwipe">
+          <ion-item on-double-tap="remove(record)" ng-repeat="record in $root.shoppingCart"
+                    class="item-thumbnail-left">
 
+            <img ng-src="{{record.data.gallery[0].URL}}">
+            <h2>{{record.data.producto}}</h2>
+            <p>{{record.data.descripcion}}</p>
+              <span class="" style="font-size:14px;color:#f1c504"><strong style="font-family: monospace;">{{record.data.precio_venta | currency:"$ "}}</strong></span>
+              <div class="qty" style="position: absolute;top: -12px;left: 36px;">
+                <span class="badge badge-positive" style="position: relative;float: left;">{{record.data.unidades}}</span>
+              </div>
+            <ion-option-button class="button-positive"
+                               ng-click="remove(record)">
+              Quitar
+            </ion-option-button>
+            <ion-option-button class="button-info"
+                               ng-click="add(item)">
+              + Cantidad
+            </ion-option-button>
+            <ion-delete-button class="ion-minus-circled"
+                               ng-click="items.splice($index, 1)">
+            </ion-delete-button>
+            <ion-reorder-button class="ion-navicon"
+                                on-reorder="reorderItem(item, $fromIndex, $toIndex)">
+            </ion-reorder-button>
+          </ion-item>
+        </ion-list>
+    </ion-content>
     <ion-footer-bar style="height:60px!important;" ng-hide="$root.shoppingCart.length == 0" align-title="left">
       <div class="row">
           <div class="col">
-            <button style="margin:0px;" ng-click="formInfo('OP')" class="button button-custom icon ion-paper-airplane button button-block">
-               Pedir
-            </button>
+            <button style="margin:0px;" ng-click="formInfo('OP')" class="button button-custom icon ion-paper-airplane button button-block">Pedir</button>
           </div>
           <div class="col" >
-           <button style="margin:0px;" ng-click="formInfo('FA')" class="button button-custom icon ion-card button button-block">
-               Facturar
-           </button>
-          </div>      
+           <button style="margin:0px;" ng-click="formInfo('FA')" class="button button-custom icon ion-card button button-block">Facturar</button>
+          </div> 
+          <div class="col" >
+           <button style="margin:0px;" ng-click="formInfo('RE')" class="button button-custom icon ion-card button button-block">Remision</button>
+          </div> 
       </div>
     </ion-footer-bar>  
 </div>

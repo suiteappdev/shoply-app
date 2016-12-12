@@ -1,7 +1,10 @@
 angular.module('starter.controllers').controller('shoppingCarController', function($scope, api, $ionicLoading,  $ionicPopup, $rootScope, shoppingCart, $state, storage, $ionicModal){
    $scope.total = shoppingCart.totalize();
    $scope.addressList  = angular.fromJson(storage.get('addressList')) || [];
-   
+   $scope.shouldShowDelete = false;
+   $scope.shouldShowReorder = false;
+   $scope.listCanSwipe = true
+
    $ionicModal.fromTemplateUrl('templates/modal/request_info.html', {
     scope: $scope
    }).then(function(modal){
