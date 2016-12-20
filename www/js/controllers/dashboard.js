@@ -1,4 +1,4 @@
-angular.module('starter.controllers').controller('dashboardCtrl', function($scope, $rootScope, $ionicPlatform,  $q,  $ionicScrollDelegate, $timeout, api, constants, account, storage, $ionicPopup, $ionicLoading, $state, shoppingCart, $ionicModal){
+angular.module('starter.controllers').controller('dashboardCtrl', function($scope, $rootScope, $ionicPlatform,  $q,  $ionicScrollDelegate, $timeout, api, constants, account, storage, $ionicPopup, $ionicLoading, $state, shoppingCart, $ionicModal, $cordovaPrinter){
     $scope.localHistory = [];
    $scope.shouldShowDelete = false;
    $scope.shouldShowReorder = false;
@@ -20,8 +20,15 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
       $scope.modal = modal;
    });
 
+  $scope.print = function(){
+    var printerAvail = $cordovaPrinter.isAvailable()
 
-    $scope.totalize = function(n){
+    var doc = "<html><h1>Hola</h1></html>";
+    
+    $cordovaPrinter.print(doc)    
+  }
+
+  $scope.totalize = function(n){
         var total = 0;
 
         for (var i = 0; i < shoppingCart.totalize(n).length; i++) {
