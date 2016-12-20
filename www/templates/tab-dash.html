@@ -17,7 +17,7 @@
 	        <div>
 	        	<i style="font-size: 100px;color:#C5C5C5" class="icon ion-android-sad"></i>
 	        	<p>No existen productos</p>
-	        	<a href="" ng-click="back()">Regresar</a>
+				<a ng-click="toDashboard()" style="color:#848484;font-size:14px;text-decoration:none;" href=""><i style="color: orange;" class="icon ion-arrow-left"></i>Regresar</a>
 	        </div>
 	      </div>
 	    </div>
@@ -36,24 +36,24 @@
 		  </div>
 		<div class="item item-body">
 		<ion-slide-box on-double-tap="add()">
-		  <ion-slide ng-repeat="media in record.data.gallery">
+		  <ion-slide ng-repeat="media in record.gallery">
 		  	<img class="full-image" preload-image ng-src="{{media.URL}}" default-image="img/loader.gif" fallback-image="img/loader.gif" />
 		  </ion-slide>
 		</ion-slide-box>
 			<div class="row">
 				<div class="col">
-					<h3>{{record.data.producto}}</h3>
+					<h3>{{record.producto}}</h3>
 				</div>
 			</div>
 		    <div class="row">
 		    	<div class="col">
 			    	<div class="" style="text-align:left;">
-			    		<strong>{{record.data.precio_venta  | currency:"$ "}}</strong>
+			    		<strong>{{record.precio_VentaFacturado || record.precio_venta  | currency:"$ "}}</strong>
 			    	</div>		    		
 		    	</div>
 		    	<div class="col">
-			    	<div class="" style="text-align:right;">
-			    		<a ng-click="" style="color:#848484;font-size:14px;text-decoration:none;" href=""><i style="color: orange;" class="icon ion-plus-circled"></i>  Descuento</a>
+			    	<div ng-show="record.cantidad > 0" class="" style="text-align:right;">
+			    		<a ng-click="agregarDescuento()" style="color:#848484;font-size:14px;text-decoration:none;" href=""><i style="color: orange;" class="icon ion-plus-circled"></i>  Descuento</a>
 			    	</div>		    		
 		    	</div>
 		    </div>

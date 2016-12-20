@@ -3,34 +3,41 @@ angular.module('starter.services')
   .service('shoppingCart', function ($rootScope) {
     return {
       totalize : function(products){
-        var _total = 0;
+        var _total = [];
 
-        angular.forEach(products, function(_curr){
-          console.log("_curr", _curr);
-          _total = _total + (_curr.data.unidades * _curr.data.precio_venta);
-        });
+        for (var i = 0; i < products.length; i++) {
+            _total.push(products[i].precio_VentaFacturado || products[i].precio_venta);
+        };
 
         return _total;
       },
 
       totalizeIva : function(products){
-        var _total = 0;
+        var _total = [];
 
-        angular.forEach(products, function(_curr){
-              _total = (_total + (_curr.data.valor_iva)) * _curr.data.unidades;
-        });
+        for (var i = 0; i < products.length; i++) {
+            _total.push(products[i].ivaFacturado)
+        };
+
+        return _total;
+      },
+
+      totalizeBases : function(products){
+        var _total = [];
+
+        for (var i = 0; i < products.length; i++) {
+          _total.push(products[i].precio_baseFacturado)
+        };
 
         return _total;
       },
 
       totalizeDiscount : function(products){
-        var _total = 0;
+        var _total = [];
 
-        angular.forEach(products, function(_curr){
-          if(_curr.data.valor_descuento){
-             _total = (_total + _curr.data.valor_descuento);
-          }
-        });
+        for (var i = 0; i < products.length; i++) {
+          _total.push(parseInt(products[i].descuento))
+        };
 
         return _total;
       }

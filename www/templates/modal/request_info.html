@@ -1,6 +1,7 @@
 <ion-modal-view >
   <ion-header-bar style="background-color: #FF0A21;border-color: #CA0000;" class="bar bar-header bar-positive">
     <h1 class="title" ng-show="$root.mode == 'OP'">Opciones de Pedido</h1>
+    <h1 class="title" ng-show="$root.mode == 'RE'">Opciones de Remición</h1>
     <h1 class="title" ng-show="$root.mode == 'FA'">Opciones de Facturacion</h1>
     <button class="button button-clear button-primary" ng-click="modal.hide()">Cancelar</button>
   </ion-header-bar>
@@ -11,7 +12,7 @@
              <span class="input-label " style="color:black!important;">Cliente</span>
              <input type="text" style="color:black!important;" required ng-model="$parent.$parent.$parent.form._client.name" placeholder="Clientes">
          </label>
-        <a href="" cancel-button="Cerrar" has-search="true" cancel-search-button="Limpiar" clear-search-on-select="true" search-placeholder="Buscar Cliente" reset-button="Limpiar" modal-select ng-model="$parent.$parent.$parent.form._client" options="records" modal-title="Cliente" style="float: right;font-size: 16px;position: relative;top: 0px;color: #8e8d8d;">Seleccionar Cliente
+        <a href="" cancel-button="Cerrar" has-search="true" cancel-search-button="Limpiar" clear-search-on-select="true" search-placeholder="Buscar Cliente" reset-button="Limpiar" modal-select ng-model="$parent.$parent.$parent.form._client" options="clients" modal-title="Cliente" style="float: right;font-size: 16px;position: relative;top: 0px;color: #8e8d8d;">Seleccionar Cliente
             <div class="option">
                 {{(option.name + " " +option.last_name)}}
             </div>
@@ -76,7 +77,7 @@
            <span class="text-center" style="position: absolute;top: -20px;font-size: 11px;font-weight: bold;">Resumen de la orden</span>
            <div class = "col" >
              <span class="footer-label">TOTAL</span>
-             <span class="footer-value">{{totalParcial  || total | currency:"$ "}}</span>
+             <span class="footer-value">{{total | currency:"$ "}}</span>
            </div>
            <div class = "col">
              <span class="footer-label">SUBTOTAL</span>
@@ -85,6 +86,10 @@
            <div class = "col">
              <span class="footer-label">TOTAL IVA</span>
              <span class="footer-value">{{TotalIva  | currency:"$ "}}</span>
+           </div>
+           <div class = "col">
+             <span class="footer-label">Descuento</span>
+             <span class="footer-value">{{descuento  | currency:"$ "}}</span>
            </div>
         </div>
     </ion-footer-bar> 
@@ -95,6 +100,9 @@
         <button ng-show="$root.mode == 'FA'"  style="margin: 0px;width: 100%;right: 0px;
     bottom: 0px;" ng-click="bill()" class="button button-block button-custom icon ion-card">
            Facturar
+        </button>
+        <button ng-show="$root.mode == 'RE'"  style="margin: 0px;width: 100%;right: 0px;   bottom: 0px;" ng-click="sendRemition()" class="button button-block button-custom icon ion-paper-airplane">
+           Realizar Remisión
         </button>
     </ion-footer-bar> 
 </ion-modal-view>

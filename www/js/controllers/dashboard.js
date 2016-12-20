@@ -1,15 +1,155 @@
-angular.module('starter.controllers').controller('dashboardCtrl', function($scope, $rootScope, $ionicPlatform,  $q,  $ionicScrollDelegate, $timeout, api, constants, account, storage, $ionicPopup, $ionicLoading, $state){
+angular.module('starter.controllers').controller('dashboardCtrl', function($scope, $rootScope, $ionicPlatform,  $q,  $ionicScrollDelegate, $timeout, api, constants, account, storage, $ionicPopup, $ionicLoading, $state, shoppingCart, $ionicModal){
     $scope.localHistory = [];
-  
+   $scope.shouldShowDelete = false;
+   $scope.shouldShowReorder = false;
+   $scope.listCanSwipe = true
+
+    $scope.records = [];
+    $scope.total = 0;
+
+    $rootScope.$watch('shoppingCart', function(n, o){
+       $scope.totalize(n);       
+       $scope.totalizeBases(n);       
+       $scope.totalizeDiscount(n);       
+       $scope.totalizeIva(n);       
+    }, true);
+
+   $ionicModal.fromTemplateUrl('templates/modal/request_info.html', {
+    scope: $scope
+   }).then(function(modal){
+      $scope.modal = modal;
+   });
+
+
+    $scope.totalize = function(n){
+        var total = 0;
+
+        for (var i = 0; i < shoppingCart.totalize(n).length; i++) {
+            total = (total + shoppingCart.totalize(n)[i])
+        };
+
+        $scope.total = total;
+    }
+
+    $scope.totalizeIva = function(n){
+        var total = 0;
+
+        for (var i = 0; i < shoppingCart.totalizeIva(n).length; i++) {
+            total = (total + shoppingCart.totalizeIva(n)[i])
+        };
+
+        $scope.TotalIva = total;
+    }
+
+    $scope.totalizeBases = function(n){
+        var total = 0;
+
+        for (var i = 0; i < shoppingCart.totalizeBases(n).length; i++) {
+            total = (total + shoppingCart.totalizeBases(n)[i])
+        };
+
+        $scope.subTotal = total;
+    }
+
+    $scope.totalizeDiscount = function(n){
+        var total = 0;
+
+        for (var i = 0; i < shoppingCart.totalizeDiscount(n).length; i++) {
+            total = (total + shoppingCart.totalizeDiscount(n)[i])
+        };
+
+        $scope.descuento = total;
+    }
+
+
     $rootScope.$on('add_comment', function(event, data){
       $scope.products[data.index].comments.push(data.comment);
     });
+
+    $scope.agregarDescuento = function(){
+          $scope.descuentoRecord = this.record;
+
+          var confirmPopup = $ionicPopup.show({
+            template: '<input type="number" style="text-align:center;margin-bottom: 5px;" placeholder="Descuento en %"  ng-model="$parent.pdiscount"><input type="number" style="text-align:center;" placeholder="Descuento en $"  ng-model="$parent.pdiscountPesos">',
+            title: 'Descuentos',
+            subTitle: 'Aplique el descuento',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancelar' },
+              {
+                text: '<b>Ok</b>',
+                type: 'button-custom',
+                onTap: function(e) {
+                    if($scope.pdiscount){
+                        return $scope.pdiscount;
+                    }
+
+                    if($scope.pdiscountPesos){
+                        return $scope.pdiscountPesos;
+                    }
+                }
+              }
+            ]
+          });
+
+           confirmPopup.then(function(res) {
+              if(res) {
+                  if($scope.pdiscount){
+                      $scope.descuentoRecord.porcentajeDTO = $scope.pdiscount;
+                      $scope.descuentoRecord.descuento = ($scope.descuentoRecord.precio_venta * parseInt($scope.pdiscount) * $scope.descuentoRecord.cantidad) / 100;
+                      $scope.descuentoRecord.precio_VentaFacturado = ($scope.descuentoRecord.precio_VentaFacturado - $scope.descuentoRecord.descuento)
+                      $scope.descuentoRecord.precio_baseVlFacturado = (($scope.descuentoRecord.precio_baseFacturado || ($scope.descuentoRecord.precio + $scope.descuentoRecord.valor_utilidad)   * $scope.pdiscount) / 100);
+                      $scope.descuentoRecord.ivaFacturado = $scope.descuentoRecord.ivaFacturado - (($scope.descuentoRecord.ivaFacturado * $scope.pdiscount) / 100);
+                      $scope.descuentoRecord.precio_baseFacturado = ( $scope.descuentoRecord.precio_baseFacturado || $scope.descuentoRecord.precio + $scope.descuentoRecord.valor_utilidad) - ( $scope.descuentoRecord.precio_baseFacturado || $scope.descuentoRecord.precio + $scope.descuentoRecord.valor_utilidad) * $scope.pdiscount / 100;
+                      $scope.descuentoRecord.vlUnicoD = ($scope.descuentoRecord.total * $scope.pdiscount) / 100;
+                      $scope.descuentoRecord.vlUnicoP = ($scope.descuentoRecord.total - $scope.descuentoRecord.vlUnicoD);
+                    }
+
+                    if($scope.pdiscountPesos){
+                      $scope.descuentoRecord.pesosDTO = $scope.pdiscountPesos;
+                      $scope.descuentoRecord.descuento = $scope.pdiscountPesos;
+
+                      $scope.descuentoRecord.precio_VentaFacturado = ($scope.descuentoRecord.precio_VentaFacturado - $scope.descuentoRecord.descuento)
+                      $scope.descuentoRecord.precio_baseFacturado = ($scope.descuentoRecord.precio_VentaFacturado) / (($scope.descuentoRecord.iva.data.valor / 100) + 1) ;
+                      
+                      $scope.descuentoRecord.ivaFacturado =  $scope.descuentoRecord.precio_VentaFacturado - $scope.descuentoRecord.precio_baseFacturado;
+                  }
+
+             } else {
+               return;
+             }
+           }); 
+    }
 
     $scope.show = function() {
         $ionicLoading.show({
           template: '<ion-spinner icon="spiral"></ion-spinner>'
         });
     };
+
+    $scope.formInfo = function(mode){
+    if($rootScope.isClosedSell && mode == 'FA'){
+       var confirmPopup = $ionicPopup.confirm({
+             title: 'No se puede facturar',
+             template: 'Tu periodo de facturación ha sido cerrado.',
+                scope: $scope,
+                buttons: [
+                  { text: 'Cancelar' },
+                  {
+                    text: '<b>Ok</b>',
+                    type: 'button-custom',
+                    onTap: function(e) {
+                      return true;
+                    }
+                  }
+                ]
+           });
+
+       return;
+    }
+      $rootScope.mode = mode;
+      $scope.modal.show();
+    }
 
      $scope.showConfirm = function() {
        var confirmPopup = $ionicPopup.confirm({
@@ -78,9 +218,8 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
 
     $scope.add = function(){
         var _product = this.record;
-        console.log(_product);
           var myPopup = $ionicPopup.show({
-            template: '<input type="number"  ng-init="$parent.unidades = 1" style="text-align:center;" placeholder="Numero de Unidades"  ng-model="$parent.unidades">',
+            template: '<input type="number"  ng-init="$parent.cantidadModel = 1" style="text-align:center;" placeholder="Numero de Unidades"  ng-model="$parent.cantidadModel">',
             title: 'Unidades',
             subTitle: 'escriba el numero de unidades a pedir',
             scope: $scope,
@@ -90,11 +229,11 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
                 text: '<b>Ok</b>',
                 type: 'button-custom',
                 onTap: function(e) {
-                  if (!$scope.unidades) {
+                  if (!$scope.cantidadModel) {
                     e.preventDefault();
 
                   } else {
-                    return $scope.unidades;
+                    return $scope.cantidadModel;
                   }
                 }
               }
@@ -103,28 +242,56 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
 
           myPopup.then(function(res) {
             if(res){
-                var _updated = false; 
+                if($rootScope.shoppingCart.indexOf(_product) > -1){
+                    _product.cantidad = parseInt($scope.cantidadModel);
+                    _product.precio_baseFacturado = ((_product.precio_VentaFacturado || _product.precio + _product.valor_utilidad) * $scope.cantidadModel);
+                    _product.precio_VentaFacturado = ((_product.precio_VentaFacturado || _product.precio_venta) * $scope.cantidadModel);
+                    _product.ivaFacturado =  (_product.precio_VentaFacturado - _product.precio_baseFacturado);
+                    _product.descuento = (_product.precio_VentaFacturado || _product.precio_venta * parseInt(_product.porcentajeDTO) * _product.cantidad) / 100;
+                    _product.precio_VentaFacturado = ( _product.precio_VentaFacturado || _product.precio_venta -  _product.descuento);
+                }else{
+                    _product.cantidad = parseInt($scope.cantidadModel);
+                    _product.precio_baseFacturado = ((_product.precio + _product.valor_utilidad) * $scope.cantidadModel);
+                    _product.precio_VentaFacturado = ((_product.precio_venta) * $scope.cantidadModel);
+                    _product.ivaFacturado =  (_product.precio_VentaFacturado - _product.precio_baseFacturado);
+                    _product.descuento = (_product.precio_venta * parseInt(_product.porcentajeDTO) * _product.cantidad) / 100;
+                    _product.precio_VentaFacturado = ( _product.precio_VentaFacturado || _product.precio_venta -  _product.descuento);
+                    _product.total = _product.precio_venta, 
+                    _product.vlUnicoD = 0;
+                    _product.vlUnicoP = _product.precio_venta;
 
-                angular.forEach($rootScope.shoppingCart, function(_cur){
-                  if(_cur._id == _product._id ){
-                    var _unidades = _cur.data.unidades;
-                    _unidades = _unidades + res;
-
-                    angular.extend(_cur.data, {unidades : _unidades});
-                    _updated = true;    
-                  }
-                });
-
-                if(_updated){
-                  return;
+                    $rootScope.shoppingCart.push(_product);                  
+                    }
                 }
-
-                angular.extend(_product.data, {unidades : res});
-                $rootScope.shoppingCart.push(_product);
-                $scope.unidades = 1;
-            }
           });
     }
+
+    $scope.remove = function(product){
+     var confirmPopup = $ionicPopup.confirm({
+         title: 'Quitar Producto',
+         template: 'Desea eliminar este producto del carrito?',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancelar' },
+              {
+                text: '<b>Ok</b>',
+                type: 'button-custom',
+                onTap: function(e) {
+                  return true;
+                }
+              }
+            ]
+       });
+
+       confirmPopup.then(function(res) {
+         if(res) {
+            $rootScope.shoppingCart.splice($rootScope.shoppingCart.indexOf(product), 1);
+         } else {
+           return;
+         }
+       });
+    }
+
 
     $scope.unFollow = function(){
         api.producto().add("unfollow").post(angular.fromJson(localStorage.user)._id).success(function(res){
@@ -152,6 +319,87 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
             $scope.records = res || [];
             $scope.hide();
         });
+        api.user().get().success(function(res){
+            $scope.clients = res.filter(function(o){
+                return o.type == 'CLIENT';
+            });
+        });
+    }
+
+    $scope.getPayment = function(){
+      api.formas_pagos().get().success(function(res){
+        $scope.paymentMethods = res || [];
+      });   
+    }
+
+    $scope.confirmRequest = function(){
+     var alertPopup = $ionicPopup.alert({
+       title: 'Enviado!',
+       template: 'Su pedido ha sido Enviado',
+          scope: $scope,
+          buttons: [
+            {
+              text: '<b>Ok</b>',
+              type: 'button-custom',
+              onTap: function(e) {
+                return true;
+              }
+            }
+          ]
+     });
+
+     alertPopup.then(function(res) {
+       $scope.modal.hide();
+       $scope.back();
+     });
+    }
+
+    $scope.confirmRemition = function(){
+     var alertPopup = $ionicPopup.alert({
+       title: 'Enviado!',
+       template: 'Su remisión ha sido enviada',
+          scope: $scope,
+          buttons: [
+            {
+              text: '<b>Ok</b>',
+              type: 'button-custom',
+              onTap: function(e) {
+                return true;
+              }
+            }
+          ]
+     });
+
+     alertPopup.then(function(res) {
+       $scope.modal.hide();
+       $scope.back();
+     });
+    }
+
+    $scope.confirmBill = function(){
+     var alertPopup = $ionicPopup.alert({
+       title: 'Finalizado!',
+       template: 'Su venta ha sido realizada',
+          scope: $scope,
+          buttons: [
+            {
+              text: '<b>Ok</b>',
+              type: 'button-custom',
+              onTap: function(e) {
+                return true;
+              }
+            }
+          ]
+     });
+
+     alertPopup.then(function(res) {
+       $scope.modal.hide();
+       $scope.back();
+     });
+    } 
+
+    $scope.back = function(){
+        $state.go('tab.dash');
     }
 
     $scope.browse = function(category, back){
@@ -168,7 +416,21 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
         var _reqCategories = api.categoria().add("childs/" + category._id).get();
 
         $q.all([_reqCategories, _reqProducts]).then(function(values){
-            $scope.products = values[1].data;
+            $scope.products = values[1].data.map(function(o){
+                var _obj = new Object();
+
+                _obj = o.data;
+                _obj._company = o._company;
+                _obj._iva = o._iva;
+                _obj._reference = o._reference;
+                _obj._category = o._category;
+                _obj._id = o._id;
+                _obj.idcomposed = o.idcomposed;
+                _obj.refMixed = o._reference.reference.join("");
+
+                return _obj; 
+            }) || [];
+
             $scope.records = values[0].data;
             $scope.hide();
         })
@@ -176,5 +438,183 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
 
     $scope.back = function(){
       $scope.load();
+    }
+
+    $scope.toDashboard = function(){
+        $state.go('tab.dash');
+    }
+
+
+    $scope.sendRequest = function(){
+       var confirmPopup = $ionicPopup.confirm({
+         title: 'Enviar Pedido',
+         template: '¿ Desea realizar este pedido?',
+          scope: $scope,
+          buttons: [
+            { text: 'Cancelar' },
+            {
+              text: '<b>Ok</b>',
+              type: 'button-custom',
+              onTap: function(e) {
+                return true;
+              }
+            }
+          ]
+       });
+
+       confirmPopup.then(function(res) {
+        if(res) {
+            var _data = angular.extend($scope.form, {
+                _seller : angular.fromJson(storage.get('user'))._id,
+                shoppingCart: $rootScope.shoppingCart,
+                _client : $scope.form._client._id 
+            });
+
+            navigator.geolocation.getCurrentPosition(function(res){
+              _data.data = {};
+              _data.data.tipo = "Orden de Pedido";
+              _data.data.total = $scope.total;
+              _data.data.cantidad = $rootScope.shoppingCart.length;
+              _data.data.subtotal = $scope.subTotal;
+              _data.data.TotalIva = $scope.TotalIva;
+              _data.data.descuento = $scope.descuento;
+              _data.data.geo = {};
+              _data.data.geo.latitude = res.coords.latitude;
+              _data.data.geo.longitude = res.coords.longitude;
+              
+              api.ivas().get().success(function(res){
+                  var _filteredByIvas = [];
+                  _data.data.ivadetails = [];
+                  
+                  angular.forEach(res, function(o){
+                    _filteredByIvas.push($rootScope.shoppingCart.filter(function(i){
+                          if(!i._iva){
+                            i._iva = new Object();
+                            i._iva.data = new Object();                        
+                            i._iva.data.valor = 0;                        
+                          }
+
+                          return i._iva.data.valor == o.data.valor;
+                      }));
+                  });
+
+                  angular.forEach(_filteredByIvas, function(o){
+                    var _SUM = new Object();
+                    _SUM.total = 0;
+                    _SUM.viva = 0;
+
+                    angular.forEach(o, function(_o){
+                        _SUM.tipo = _o._iva.data.valor;
+                        _SUM.total = (_SUM.total + _o.precio_venta);
+                        _SUM.viva = (_SUM.viva + _o.valor_iva || 0);                     
+                    });
+
+                    _SUM.base = (_SUM.total - _SUM.viva);
+                    _data.data.ivadetails.push(_SUM);
+
+                  })
+
+                  api.pedido().post(_data).success(function(res){
+                      if(res){
+                          $rootScope.shoppingCart.length = 0;
+                          delete $scope.form;
+                          $scope.confirmRequest();
+                          $ionicLoading.hide();
+                      }
+                  });    
+            })
+
+            })  
+         } else {
+           console.log('You are not sure');
+         }
+       });
+    }
+
+    $scope.sendRemition = function(){
+       var confirmPopup = $ionicPopup.confirm({
+         title: 'Enviar Remisión',
+         template: '¿ Desea enviar esta remisión?',
+          scope: $scope,
+          buttons: [
+            { text: 'Cancelar' },
+            {
+              text: '<b>Ok</b>',
+              type: 'button-custom',
+              onTap: function(e) {
+                return true;
+              }
+            }
+          ]
+       });
+
+       confirmPopup.then(function(res) {
+        if(res) {
+            var _data = angular.extend($scope.form, {
+                _seller : angular.fromJson(storage.get('user'))._id,
+                shoppingCart: $rootScope.shoppingCart,
+                _client : $scope.form._client._id 
+            });  
+
+                navigator.geolocation.getCurrentPosition(function(res){
+                  _data.data = {};
+                  _data.data.tipo = "Remisión";
+                  _data.data.total = $scope.total;
+                  _data.data.cantidad = $rootScope.shoppingCart.length;
+                  _data.data.subtotal = $scope.subTotal;
+                  _data.data.TotalIva = $scope.TotalIva;
+                  _data.data.descuento = $scope.descuento;
+                  _data.data.geo = {};
+                  _data.data.geo.latitude = res.coords.latitude;
+                  _data.data.geo.longitude = res.coords.longitude;
+                  
+                  api.ivas().get().success(function(res){
+                      var _filteredByIvas = [];
+                      _data.data.ivadetails = [];
+                      
+                      angular.forEach(res, function(o){
+                        _filteredByIvas.push($rootScope.shoppingCart.filter(function(i){
+                              if(!i._iva){
+                                i._iva = new Object();
+                                i._iva.data = new Object();                        
+                                i._iva.data.valor = 0;                        
+                              }
+
+                              return i._iva.data.valor == o.data.valor;
+                          }));
+                      });
+
+                      angular.forEach(_filteredByIvas, function(o){
+                        var _SUM = new Object();
+                        _SUM.total = 0;
+                        _SUM.viva = 0;
+
+                        angular.forEach(o, function(_o){
+                            _SUM.tipo = _o._iva.data.valor;
+                            _SUM.total = (_SUM.total + _o.precio_venta);
+                            _SUM.viva = (_SUM.viva + _o.valor_iva || 0);                     
+                        });
+
+                        _SUM.base = (_SUM.total - _SUM.viva);
+                        _data.data.ivadetails.push(_SUM);
+
+                      })
+
+                      api.pedido().post(_data).success(function(res){
+                          if(res){
+                              $rootScope.shoppingCart.length = 0;
+                              delete $scope.form;
+                              $scope.confirmRemition();
+                              $ionicLoading.hide();
+                          }
+                      });    
+                })                
+
+                })
+
+         } else {
+           console.log('You are not sure');
+         }
+       });
     }
 })
