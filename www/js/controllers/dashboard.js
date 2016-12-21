@@ -21,11 +21,12 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
    });
 
   $scope.print = function(){
-    var printerAvail = $cordovaPrinter.isAvailable()
-
-    var doc = "<html><h1>Hola</h1></html>";
-    
-    $cordovaPrinter.print(doc)    
+    BTPrinter.list(function(data){
+      alert("printer", data[1])
+      },function(err){
+          console.log("Error");
+          console.log(err);
+      }) 
   }
 
   $scope.totalize = function(n){

@@ -46,6 +46,9 @@
         "phonegap-plugin-push": {
             "SENDER_ID": "871168760",
             "PACKAGE_NAME": "com.ionicframework.shoplyapp722350"
+        },
+        "cordova-plugin-bluetooth-printer": {
+            "PACKAGE_NAME": "com.ionicframework.shoplyapp722350"
         }
     },
     "dependent_plugins": {}
