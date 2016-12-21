@@ -22,7 +22,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
 
   $scope.print = function(){
     BTPrinter.list(function(data){
-      alert("printer", data[1])
+      alert("printer"+ data[1])
       },function(err){
           console.log("Error");
           console.log(err);
