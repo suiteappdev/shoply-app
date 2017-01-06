@@ -20,7 +20,6 @@
     </div>
     <div class="seller" ng-init="getPayment()"  ng-show="$root.mode == 'FA'">
          <label class="item item-input   item-floating-label" style="width:100%;">
-             <span class="input-label " style="color:black!important;">Formas de Pago</span>
              <input type="text" style="color:black!important;" required ng-model="$parent.$parent.$parent.form._paymentMethod.data.descripcion" placeholder="Forma de Pago">
          </label>
         <a href="" cancel-button="Cerrar" has-search="false" cancel-search-button="Limpiar" clear-search-on-select="true" search-placeholder="Buscar Forma de pago" reset-button="Limpiar" modal-select ng-model="$parent.$parent.$parent.form._paymentMethod" options="paymentMethods" modal-title="Forma de Pago" style="float: right;font-size: 16px;position: relative;top: 0px;color: #8e8d8d;">Seleccionar Forma de pago
@@ -31,11 +30,11 @@
     </div>
      <label ng-show="$parent.$parent.$parent.form._paymentMethod.data.descripcion" class="item item-input item-floating-label" class="item item-input item-floating-label" style="width:100%;" >
          <span class="input-label" style="color:black!important;">Valor</span>
-         <input ng-change="setReceived($parent.$parent.$parent.totalTyped)" ng-init="$parent.$parent.$parent.totalTyped" type="text" style="color:black!important;" name="field" ng-model="$parent.$parent.$parent.totalTyped" ui-number-mask>
+         <input placeholder="Valor" ng-change="setReceived($parent.$parent.$parent.totalTyped)" type="text" style="color:black!important;" name="field" ng-model="$parent.$parent.$parent.totalTyped">
      </label>
      <label ng-show="$parent.$parent.$parent.form._paymentMethod.data.descripcion" class="item item-input item-floating-label" class="item item-input item-floating-label" style="width:100%;" >
          <span class="input-label" style="color:black!important;">Descuento</span>
-         <input type="text" ng-init="$parent.$parent.$parent.gdiscount = 0;" style="color:black!important;" name="field" ng-model="$parent.$parent.$parent.gdiscount" ui-number-mask="0">
+         <input placeholder="Descuento" type="number" style="color:black!important;" name="field" ng-model="$parent.$parent.$parent.gdiscount">
      </label>
      <label  class="item item-input item-floating-label" style="width:100%;" >
          <span class="input-label" style="color:black!important;">Ciudad</span>
@@ -55,9 +54,8 @@
      </label>
     </div>
   </ion-content>
-    <ion-footer-bar  style="bottom: 108px;" ng-show="$parent.$parent.form._paymentMethod" align-title="left">
+    <ion-footer-bar  style="position: relative;bottom: -43px;" ng-show="$parent.$parent.form._paymentMethod" align-title="left">
         <div class = "row" style="text-align:center;">
-            <span class="text-center" style="position: absolute;top: -20px;font-size: 11px;font-weight: bold;">Forma de pago</span>
            <div class = "col">
              <span class="footer-label">DESCUENTO</span>
              <span class="footer-value">{{vgdescuento  || 0 | currency:"$ " }}</span>
@@ -68,7 +66,7 @@
            </div>
            <div class = "col">
              <span class="footer-label">RECIBIDO</span>
-             <span class="footer-value">{{received || totalTyped  | currency:"$ "}}</span>
+             <span class="footer-value">{{received || 0 || totalTyped  | currency:"$ "}}</span>
            </div>
         </div>
     </ion-footer-bar> 
@@ -88,8 +86,8 @@
              <span class="footer-value">{{TotalIva  | currency:"$ "}}</span>
            </div>
            <div class = "col">
-             <span class="footer-label">Descuento</span>
-             <span class="footer-value">{{descuento  | currency:"$ "}}</span>
+             <span class="footer-label">DESCUENTO</span>
+             <span class="footer-value">{{descuento || 0 | currency:"$ "}}</span>
            </div>
         </div>
     </ion-footer-bar> 

@@ -3,10 +3,10 @@
       <div class="list">
 		  <a class="item" href="#" ng-repeat="record in records">
 		   <h2>{{record._client.name + " " + record._client.last_name}}</h2>
-		   <p>{{record.createdAt | date:"yyyy-MM-dd hh:mm:ss a"}}</p>
-		    <span ng-show="record.metadata.estado == 'Facturado' " class="badge badge-assertive badge-tiny label-darkblue">{{record.metadata.estado}}</span>
-		    <span ng-show="record.metadata.estado == 'Pendiente'" class="badge badge-warning badge-tiny label-darkblue">{{record.metadata.estado}}</span>
-		    <span ng-show="record.metadata.estado == 'Despachado'" class="badge badge-success badge-tiny label-darkblue">{{record.metadata.estado}}</span>
+		   <p style="font-size: 12px;">{{record.createdAt | date:"yyyy-MM-dd hh:mm:ss a"}}</p>
+		    <span ng-show="record.data.estado == 'Facturado' " class="badge badge-assertive badge-tiny label-darkblue">{{record.data.estado}}</span>
+		    <span ng-show="record.data.estado == 'Pendiente' || !record.data.estado " class="badge badge-energized badge-tiny">Pendinte</span>
+		    <span ng-show="record.data.estado == 'Facturado'" class="badge badge-success badge-tiny label-darkblue">{{record.data.estado}}</span>
 		  </a>
         </form>
       </div>

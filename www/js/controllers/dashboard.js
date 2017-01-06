@@ -21,12 +21,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
    });
 
   $scope.print = function(){
-    BTPrinter.list(function(data){
-      alert("printer"+ data[1])
-      },function(err){
-          console.log("Error");
-          console.log(err);
-      }) 
+
   }
 
   $scope.totalize = function(n){
@@ -625,4 +620,111 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
          }
        });
     }
+
+    $scope.$watch('gdiscount', function(n, o){
+      if(n || o){
+        console.log("nuevo des", n);
+        $scope.vgdescuento =  ($scope.total * $scope.gdiscount / 100);
+        $scope.totalParcial = (angular.copy($scope.total) - ($scope.vgdescuento))  
+        $scope.setReceived();      
+      }
+    });
+
+    $scope.setReceived = function(){
+      $scope.received = $scope.totalTyped;
+
+      var _sum = ($scope.totalParcial - $scope.received);
+
+      if(_sum < 0){
+          $scope.change = _sum * (-1) ;
+      }else{
+        $scope.change = 0;
+      }
+    }
+
+   $scope.bill = function(){
+   var confirmPopup = $ionicPopup.confirm({
+         title: 'Facturar',
+         template: 'Desea realizar esta acción?',
+            scope: $scope,
+            buttons: [
+              { text: 'Cancelar' },
+              {
+                text: '<b>Ok</b>',
+                type: 'button-custom',
+                onTap: function(e) {
+                  return true;
+                }
+              }
+            ]
+       });
+
+       confirmPopup.then(function(res) {
+         if(res) {
+                $scope.formBill = {};
+                $scope.formBill.data =  {};
+                $scope.formBill._seller = angular.fromJson(storage.get('user'))._id;
+                $scope.formBill._client = $scope.form._client._id;
+                $scope.formBill.data.descuentoGlobal = $scope.gdiscount || 0;
+                $scope.formBill.data.valorDescuentoGlobal = $scope.vgdescuento;
+                $scope.formBill.data.TotalIva = $scope.TotalIva;
+                $scope.formBill.data.total = $scope.totalParcial || $scope.total;
+                $scope.formBill.data.subtotal =  $scope.subTotal;
+
+                $scope.form._paymentMethod.data.value = $scope.totalTyped;
+                $scope.formBill._payments = [$scope.form._paymentMethod];
+
+              
+                console.log("formBill", $scope.formBill);
+                
+                api.ivas().get().success(function(res){
+                    var _filteredByIvas = [];
+                    $scope.formBill.data.ivadetails = [];
+                    
+                    angular.forEach(res, function(o){
+                      _filteredByIvas.push($rootScope.shoppingCart.filter(function(i){
+                            if(!i._iva){
+                              i._iva = new Object();
+                              i._iva.data = new Object();                        
+                              i._iva.data.valor = 0;                        
+                            }
+
+                            return i._iva.data.valor == o.data.valor;
+                        }));
+                    });
+
+                    angular.forEach(_filteredByIvas, function(o){
+                      var _SUM = new Object();
+                      _SUM.total = 0;
+                      _SUM.viva = 0;
+
+                      angular.forEach(o, function(_o){
+                          _SUM.tipo = _o._iva.data.valor;
+                          _SUM.total = (_SUM.total + _o.precio_venta);
+                          _SUM.viva = (_SUM.viva + _o.valor_iva || 0);                     
+                      });
+
+                      _SUM.base = (_SUM.total - _SUM.viva);
+                      $scope.formBill.data.ivadetails.push(_SUM);
+
+                    })
+
+                    $scope.formBill._product = $rootScope.shoppingCart;
+
+                    api.facturacion().post($scope.formBill).success(function(res){
+                      if(res){
+                          delete $scope.formBill;
+                          $rootScope.shoppingCart.length = 0;
+                          $scope.confirmBill();
+                      }
+                    });      
+
+              })
+         } else {
+           return;
+         }
+       });
+          
+   }
+
 })

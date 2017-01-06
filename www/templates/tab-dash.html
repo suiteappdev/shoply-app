@@ -21,7 +21,6 @@
 	        </div>
 	      </div>
 	    </div>
-	    <button ng-click="print()">Imprimir Ticket</button>
 	    <div class="list">
 	       <div class="item item-thumbnail-left" ng-repeat="record in records | filter:search" ng-click="browse(record, false)">
 	       	  <img style="width:80px" ng-src="{{record.data.gallery[0].URL}}">
@@ -80,5 +79,4 @@
 		</div>
 	  </ion-content>	
 </div>
-	
 </ion-view>
