@@ -17,7 +17,7 @@
 	        <div>
 	        	<i style="font-size: 100px;color:#C5C5C5" class="icon ion-android-sad"></i>
 	        	<p>No existen productos</p>
-				<a ng-click="toDashboard()" style="color:#848484;font-size:14px;text-decoration:none;" href=""><i style="color: orange;" class="icon ion-arrow-left"></i>Regresar</a>
+           		<a ng-click="toDashboard()" style="color:#848484;font-size:18px;text-decoration:none;" href=""><i style="color: orange;margin-right: 7px;" class="icon ion-reply"></i>Regresar</a>
 	        </div>
 	      </div>
 	    </div>
@@ -25,6 +25,7 @@
 	       <div class="item item-thumbnail-left" ng-repeat="record in records | filter:search" ng-click="browse(record, false)">
 	       	  <img style="width:80px" ng-src="{{record.data.gallery[0].URL}}">
 	          <h3>{{record.text.toUpperCase()}}</h3>
+	          <h4>{{record.data.descripcion}}</h4>
 	          <span>{{record._company.data.empresa || 'sin empresa' }}</span>
 	       </div>
 	    </div>

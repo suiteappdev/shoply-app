@@ -20,10 +20,6 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
       $scope.modal = modal;
    });
 
-  $scope.print = function(){
-
-  }
-
   $scope.totalize = function(n){
         var total = 0;
 
@@ -416,7 +412,7 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
         }
 
         var _reqProducts = api.producto().add('category/' + category._id).get();
-        var _reqCategories = api.categoria().add("childs/" + category._id).get();
+        var _reqCategories = api.categoria().add("childs/" + category.id).get();
 
         $q.all([_reqCategories, _reqProducts]).then(function(values){
             $scope.products = values[1].data.map(function(o){
@@ -484,49 +480,15 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
               _data.data.geo = {};
               _data.data.geo.latitude = res.coords.latitude;
               _data.data.geo.longitude = res.coords.longitude;
-              
-              api.ivas().get().success(function(res){
-                  var _filteredByIvas = [];
-                  _data.data.ivadetails = [];
-                  
-                  angular.forEach(res, function(o){
-                    _filteredByIvas.push($rootScope.shoppingCart.filter(function(i){
-                          if(!i._iva){
-                            i._iva = new Object();
-                            i._iva.data = new Object();                        
-                            i._iva.data.valor = 0;                        
-                          }
 
-                          return i._iva.data.valor == o.data.valor;
-                      }));
-                  });
-
-                  angular.forEach(_filteredByIvas, function(o){
-                    var _SUM = new Object();
-                    _SUM.total = 0;
-                    _SUM.viva = 0;
-
-                    angular.forEach(o, function(_o){
-                        _SUM.tipo = _o._iva.data.valor;
-                        _SUM.total = (_SUM.total + _o.precio_venta);
-                        _SUM.viva = (_SUM.viva + _o.valor_iva || 0);                     
-                    });
-
-                    _SUM.base = (_SUM.total - _SUM.viva);
-                    _data.data.ivadetails.push(_SUM);
-
-                  })
-
-                  api.pedido().post(_data).success(function(res){
-                      if(res){
-                          $rootScope.shoppingCart.length = 0;
-                          delete $scope.form;
-                          $scope.confirmRequest();
-                          $ionicLoading.hide();
-                      }
-                  });    
-            })
-
+              api.pedido().post(_data).success(function(res){
+                  if(res){
+                      $rootScope.shoppingCart.length = 0;
+                      delete $scope.form;
+                      $scope.confirmRequest();
+                      $ionicLoading.hide();
+                  }
+              });    
             })  
          } else {
            console.log('You are not sure');
