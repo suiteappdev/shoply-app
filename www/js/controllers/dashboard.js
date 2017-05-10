@@ -20,6 +20,24 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
       $scope.modal = modal;
    });
 
+   $scope.$watch('form._client', function(n, o){
+          if(n){
+            if(!$scope.form.metadata){
+              $scope.form.metadata = {};
+              $scope.form.metadata.telefono = n.data.phone || null;
+              $scope.form.metadata.direccion = n.data.direccion || null;
+              $scope.form.metadata.ciudad = n.data.ciudad || null;
+              $scope.form.metadata.barrio = n.data.barrio || null;
+            }else{
+              $scope.form.metadata.telefono = parseInt(n.data.phone) || null;
+              $scope.form.metadata.direccion = n.data.direccion || null;
+              $scope.form.metadata.ciudad = n.data.ciudad || null; 
+              $scope.form.metadata.barrio = n.data.barrio || null; 
+            }            
+          }
+
+   });
+
   $scope.totalize = function(n){
         var total = 0;
 
@@ -109,7 +127,8 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
                       $scope.descuentoRecord.descuento = $scope.pdiscountPesos;
 
                       $scope.descuentoRecord.precio_VentaFacturado = ($scope.descuentoRecord.precio_VentaFacturado - $scope.descuentoRecord.descuento)
-                      $scope.descuentoRecord.precio_baseFacturado = ($scope.descuentoRecord.precio_VentaFacturado) / (($scope.descuentoRecord.iva.data.valor / 100) + 1) ;
+                      $scope.descuentoRecord.precio_baseFacturado = ($scope.descuentoRecord.precio_VentaFacturado) / (($scope.descuentoRecord._iva.data.valor / 100) + 1) ;
+                      $scope.descuentoRecord.precio_baseFacturado = ($scope.descuentoRecord.precio_VentaFacturado) / (($scope.descuentoRecord._iva.data.valor / 100) + 1) ;
                       
                       $scope.descuentoRecord.ivaFacturado =  $scope.descuentoRecord.precio_VentaFacturado - $scope.descuentoRecord.precio_baseFacturado;
                   }
@@ -186,15 +205,31 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
         $scope.show();
         
         var _parent = $scope.localHistory.pop();
-        
+        var _previus_category = $scope.localHistory[0];
         if(_parent.parent == "#"){
           $scope.load();
           return;
         }
 
         var _reqCategories = api.categoria().add("childs/" + _parent.parent).get({cache:false});
-        
-        $q.all([_reqCategories]).then(function(values){
+        var _reqProducts = api.producto().add('category/' + _previus_category._id).get();
+
+        $q.all([_reqCategories, _reqProducts]).then(function(values){
+            $scope.products = values[1].data.map(function(o){
+                var _obj = new Object();
+
+                _obj = o.data;
+                _obj._company = o._company;
+                _obj._iva = o._iva;
+                _obj._reference = o._reference;
+                _obj._category = o._category;
+                _obj._id = o._id;
+                _obj.idcomposed = o.idcomposed;
+                _obj.refMixed = o._reference.reference.join("");
+
+                return _obj; 
+            }) || [];
+
             $scope.records = values[0].data;
             $scope.hide();
         })
@@ -285,6 +320,11 @@ angular.module('starter.controllers').controller('dashboardCtrl', function($scop
        confirmPopup.then(function(res) {
          if(res) {
             $rootScope.shoppingCart.splice($rootScope.shoppingCart.indexOf(product), 1);
+            
+            if($rootScope.shoppingCart.length == 0){
+                $state.go('tab.dash', {}, {reload: true});
+            }
+
          } else {
            return;
          }

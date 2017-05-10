@@ -92,7 +92,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
                 
                 if(window.localStorage.token){
                    $httpProvider.defaults.headers.common['x-shoply-auth'] =  window.localStorage.token ; // common
-                   $httpProvider.defaults.headers.common['x-shoply-company']  = "588a0fe883989fa8383b0452"//rootScope._company;
+                   $httpProvider.defaults.headers.common['x-shoply-company']  = rootScope._company /*"588a0fe883989fa8383b0452"*/;
                 }
 
                 console.log(config, 'request')

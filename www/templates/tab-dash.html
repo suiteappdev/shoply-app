@@ -1,24 +1,14 @@
 <ion-view view-title="Categorias" style="background-color: #F1F1F1;background-image:url('img/background-content.png')">
 <div ng-controller="dashboardCtrl" ng-init="load()">
-           <!--
-			<div class="bar bar-subheader" style="height:auto!important;" ng-show="$root.showSearch">
-		 		<div class="bar bar-header item-input-inset"  style="border: 0px;background-image: none;">
-				  <label class="item-input-wrapper">
-				    <i class="icon ion-android-search placeholder-icon"></i>
-				    <input type="search" ng-model="search" placeholder="Buscar">
-				  </label>
-				</div>
-			</div>    
-          -->
 	  <ion-content style="margin-top: 0px;" class="" ng-class="$root.showSearch ? 'has-subheader' : ''">
 
 		<div class="content padding"   ng-show="records.length == 0 && products.length == 0">
 	      <div class="padding-example text-center">
-	        <div>
-	        	<i style="font-size: 100px;color:#C5C5C5" class="icon ion-android-sad"></i>
-	        	<p>No existen productos</p>
-           		<a ng-click="toDashboard()" style="color:#848484;font-size:18px;text-decoration:none;" href=""><i style="color: orange;margin-right: 7px;" class="icon ion-reply"></i>Regresar</a>
-	        </div>
+	          <div>
+	            <i style="font-size: 100px;color:#C5C5C5" class="icon ion-information-circled"></i>
+	            <p>No existen productos</p>
+	           	<a ng-click="history()" style="color:#848484;font-size:18px;text-decoration:none;" href=""><i style="color: orange;margin-right: 7px;" class="icon ion-reply"></i>Regresar</a>
+	          </div>
 	      </div>
 	    </div>
 	    <div class="list">
@@ -37,8 +27,11 @@
 		  </div>
 		<div class="item item-body">
 		<ion-slide-box on-double-tap="add()">
-		  <ion-slide ng-repeat="media in record.gallery">
-		  	<img class="full-image" preload-image ng-src="{{media.URL}}" default-image="img/loader.gif" fallback-image="img/loader.gif" />
+		  <ion-slide ng-show="record.gallery" ng-repeat="media in record.gallery">
+			<img class="full-image" preload-image ng-src="{{media.URL}}" default-image="img/missing-product.png" fallback-image="img/missing-product.png" />
+		  </ion-slide>
+		  <ion-slide ng-show="!record.gallery">
+			<img class="full-image" preload-image ng-src="{{'img/missing-product.png'}}" default-image="/img/missing-product.png" fallback-image="/img/missing-product.png" />
 		  </ion-slide>
 		</ion-slide-box>
 			<div class="row">

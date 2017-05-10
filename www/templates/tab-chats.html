@@ -17,7 +17,7 @@
           <ion-item on-double-tap="remove(record)" ng-repeat="record in $root.shoppingCart"
                     class="item-thumbnail-left">
 
-            <img ng-src="{{record.gallery[0].URL}}">
+            <img preload-image ng-src="{{record.gallery[0].URL}}" default-image="img/missing-product.png" fallback-image="img/missing-product.png" />
             <h2>{{record.producto}}</h2>
             <p>{{record.descripcion}}</p>
               <span class="" style="font-size:14px;color:#f1c504"><strong style="font-family: monospace;">{{record.precio_VentaFacturado || record.precio_venta | currency:"$ "}}</strong></span>
